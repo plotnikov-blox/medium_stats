@@ -138,17 +138,26 @@ def write_stats(sg, data, mode, now, sub_dir):
     now_prefix = dt_formatter(now, "filename")
     period_start_f, period_stop_f = map(partial(dt_formatter, output="filename"), [sg.start, sg.stop])
 
-    filename = "{}/{}/{}_{}_{}".format(sub_dir, extras["folder"], now_prefix, sg.slug, extras["filename_suffix"])
-    if mode in ["events", "articles"]:
+    # Save 'medium_post_events.json' in the root directory for 'articles' mode
+    if mode == "articles":
+        filename = "medium_post_events.json"
+        path = sg.write_json(data, filename)
+    elif mode == "summary":
+        # Save 'medium_agg_stats.json' in the root directory for specific modes
+        filename = "medium_agg_stats.json"
+        path = sg.write_json(data, filename)
+    else:
+        # For other modes, use the existing naming and directory structure
         filename = "{}/{}/{}_{}_{}_{}".format(
             sub_dir,
             extras["folder"],
             period_stop_f,
             period_start_f,
             sg.slug,
-            extras["filename_suffix"],
+            extras["filename_suffix"]
         )
-    path = sg.write_json(data, filename)
+        path = sg.write_json(data, os.path.join(sub_dir, filename))
+
     print(f'{extras["title"]} written to:')
     print(path, section_break, sep="\n")
     return path

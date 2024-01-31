@@ -215,7 +215,7 @@ class StatGrabberUser(StatGrabberBase):
         self.username = str(username)
         self.slug = str(username)
         super().__init__(sid, uid, start, stop, now, already_utc)
-        self.stats_url = f"https://medium.com/@{username}/stats"
+        self.stats_url = f"https://medium.com/bloxstaking/stats"
         self.totals_endpoint = f"https://medium.com/@{username}/stats/total/{self.start_unix}/{self.stop_unix}"
 
     def __repr__(self):
